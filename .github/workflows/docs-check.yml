@@ -1,0 +1,17 @@
+name: docs-check
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  markdown-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run markdownlint
+        uses: andstor/file-modification-action@v1 # small, safe check placeholder
+        with:
+          command: echo 'docs check placeholder — add a real linter if desired'
