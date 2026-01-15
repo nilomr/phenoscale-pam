@@ -30,6 +30,14 @@ This is a big one for large datasets like this, and likely necessary if you want
 
 See an example of a similarr approach here: [Google Research's Perch notebook](https://github.com/google-research/perch/blob/main/agile_modeling.ipynb) (the folks at Google call it "agile modeling", annoyingly).
 
+> ## IMPORTANT NOTE ON CALIBRATION
+>
+> When using embeddings for classification or active learning, be aware that the Perch model's output probabilities are raw neural network logits, not calibrated probabilities. This means that the confidence scores may not accurately reflect true likelihoods of correctness. For example, a prediction with a score of 0.9 does not mean there is a 90% chance that the prediction is correct. Any work that relies on these confidence scores (e.g., uncertainty sampling in active learning) should take this into account. You will need to apply calibration techniques (e.g., Platt scaling, isotonic regression) on a validation set to improve the reliability of these scores before using them in downstream tasks. See some relevant literature on model calibration:
+>
+> - Schwinger, R., McEwen, B., Kather, V. S., Heinrich, R., Rauch, L., & Tomforde, S. (2025). Uncertainty Calibration of Multi-Label Bird Sound Classifiers. arXiv preprint arXiv:2511.08261. https://arxiv.org/abs/2511.08261
+> - Wood, C. M., & Kahl, S. (2024). Guidelines for appropriate use of BirdNET scores and other detector outputs. Journal of Ornithology. https://doi.org/10.1007/s10336-024-02144-5
+
+
 
 ## More-or-less unsupervised pattern discovery
 
