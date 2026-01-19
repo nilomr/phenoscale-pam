@@ -11,7 +11,6 @@ This document outlines the technical specifications for the acoustic monitoring 
 
 The sampling strategy was designed to capture acoustic diversity across a heterogeneous forest environment, balancing spatial coverage with the detection limits of the hardware.
 
-
 ### Grid configuration
 *   **Units:** 81 AudioMoth autonomous recorders.
 *   **Layout:** 100 × 100 m regular grid.
@@ -22,15 +21,18 @@ Detection probability is non-uniform and depends on species loudness, vegetation
 *   **Rationale:** The 100 m spacing was selected to maximize spatial coverage while maintaining partial overlap. This means there will be varying levels of autocorrelation/pseudoreplication for different species.
 
 ---
-
 ## 2. Equipment & configuration
 
 | Component | Specification |
 | :--- | :--- |
 | **Recorder** | AudioMoth (Open Acoustic Devices) |
+| **Hardware versions** | Mix of v1.1 and v1.2 (randomly distributed across grid) |
 | **Housing** | Custom weatherproof enclosures |
 | **Mounting** | Thin stakes at **1.6–1.8 m** above ground level |
 | **Firmware** | Custom Bat/Bird Firmware ([Source Code](https://github.com/nilomr/AudioMoth-Wytham-Woods/tree/dev/bats)) |
+| **Batteries** | 3x D cell batteries |
+
+**Hardware version note:** The deployment includes both AudioMoth hardware v1.1 and v1.2 units (not to be confused with firmware versions). These are deployed randomly across the grid to avoid entire areas having a single version, allowing better detection of any systematic differences in performance between hardware versions.
 
 ---
 
@@ -64,10 +66,63 @@ The deployment was split into two phases to optimise for bird and bat monitoring
 
 ![Sampling Design Map](media/sampling-design.png)
 
+---
 
-### Clock drift
+## 4. Deployment & maintenance
 
-All AudioMoth devices were synchronised to UTC prior to deployment.
+### Initial deployment
+
+**Time estimate:** 2–3 full days for a single efficient person on foot.
+
+**Firmware strategy:**
+
+There are two approaches for managing the firmware transition between Phase 1 and Phase 2:
+
+*   **Option 1 (more tested):** Program units with standard firmware for Phase 1 bird monitoring, then reprogram all units in the field in July with custom firmware for Phase 2. This replicates the first year's approach and is more thoroughly tested, but requires field reprogramming.
+*   **Option 2 (time-saving):** Review, test, and use the custom firmware from initial deployment. This eliminates the need for July reprogramming, saving significant field time, but the firmware is less tested in practice.
+
+**Important:** The custom firmware will need updating of dates and scheduling parameters for the new season. I recommend becoming acquainted with the firmware code and configuration regardless of which option you choose.
+
+**Logger preparation:**
+*   All loggers should be pre-programmed and left in Custom mode before deployment.
+*   In Custom mode, they enter a listening state, waiting to be activated via acoustic chime from the smartphone app.
+*   Activation sets both the clock and GPS position (position accuracy depends on smartphone GPS module, as AudioMoth units do not have built-in GPS).
+*   **Important:** Be careful not to activate other units nearby, as all will be in listening mode simultaneously.
+
+**Deployment strategy:**
+*   Cases are labelled from previous deployments.
+*   Option 1: Redeploy loggers to their exact previous positions (use existing labels).
+*   Option 2: Switch positions around—this is faster, as labels can be rewritten once a logger is in place rather than planning which logger goes where beforehand.
+
+**Resources:**
+*   Guidance: [AudioMoth Getting Started](https://www.openacousticdevices.info/getting-started)
+*   Open-source documentation: [AudioMoth Open Source](https://www.openacousticdevices.info/open-source)
+Any audiomoth-related questions will have their answers in these resources.
+
+### Maintenance visits
+
+**Frequency:** Approximately every 1.5 months for clock resyncing.
+
+**Battery management:**
+*   Ideally check voltage of all units during each visit.
+*   Replace batteries as needed—expect one full battery change for most units during the entire deployment period, though some units may require two changes.
+*   Battery life varies with temperature, battery health, and other stochastic factors, so monitor voltage trends over time. This can be done by summarizing voltage logs, which are included as part of the file metadata, on a laptop during maintenance visits.
+
+**Clock resyncing procedure (no laptop required):**
+1. Turn the unit off.
+2. Turn it back on in Custom mode.
+3. The unit enters listening mode.
+4. Use the smartphone app to reset clock and GPS position.
+
+**Optional laptop checks:**
+*   A laptop can be used to check voltage trajectory over time and other diagnostics.
+*   This is not strictly necessary for basic maintenance but can be useful for troubleshooting.
+
+---
+
+## 5. Clock drift
+
+All AudioMoth devices were synchronised to UTC prior to deployment, then re-synchronised at approximately 1.5-month intervals during maintenance visits. 
 
 **Deployment window:** 2025-02-15 to 2025-03-18 (~31 days); 23 AudioMoth units assessed.
 
@@ -84,6 +139,6 @@ No obvious spatial pattern in drift across grid positions (rows F–J, columns 4
 
 Approximate average error is consistent with common quartz or MEMS oscillators and with AudioMoth documentation indicating up to about 2 s/day of clock drift. Values are within expectations for low-cost, unsynchronized recorders operating over several weeks, and comparable to typical crystal oscillator tolerances quoted in the electronics literature.
 
-#### Implications for analyses
+### Implications for analyses
 
 For most community-level, seasonal, or diel pattern analyses, absolute drifts of up to 1–3 s/day over a month are extremely unlikely to affect inference, especially when aggregating over minutes to 30 or 60 minute bins, as I would encourage. Anything finer-scale than that should probably not be attempted.
